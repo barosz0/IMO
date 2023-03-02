@@ -1,3 +1,7 @@
+#ifndef DATAPARSER
+#define DATAPARSER
+
+
 #include <string>
 #include <vector>
 #include <fstream>
@@ -74,4 +78,4 @@ void parser::make_matrix()
     }
 }
 
-
+#endif
