@@ -34,7 +34,7 @@ int Greedy_2regret_cycle::calc_regret(vector<int> costs, int k)
 
     for(int i=1; i < k && i < costs.size(); i++)
     {
-        ret += costs[0] - costs[k];
+        ret += abs(costs[0] - costs[k]);
     }
 
     return ret;
