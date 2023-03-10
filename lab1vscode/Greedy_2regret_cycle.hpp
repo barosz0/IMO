@@ -19,7 +19,6 @@ private:
     int get_element(list<int>* _list, int index);
 
 public:
-    int cycle_length;
     list<int> A_cycle;
     list<int> B_cycle;
     int A_length;
@@ -148,7 +147,7 @@ void Greedy_2regret_cycle::run()
     while(A->size() + B->size() < coords.size())
     {
         
-        a_len += next_pick(A,B);
+        *a_len += next_pick(A,B);
         swap(A,B);
         swap(a_len,b_len);
         // printf("\rPozostalo: %d   ", coords.size() - (A->size() + B->size()));

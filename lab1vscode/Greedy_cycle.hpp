@@ -13,9 +13,10 @@ private:
     int get_element(list<int> _list, int index);
     
 public:
-    int cycle_length;
     list<int> A_cycle;
     list<int> B_cycle;
+    int A_length;
+    int B_length;
 
     void run(int a, int b);
 
@@ -96,9 +97,9 @@ void Greedy_cycle::run(int a, int b)
 
     cout <<"Zaczynam od a:" << a << " b:" << b << endl;
     list<int> A{a};
-    int A_length = 0;
+    A_length = 0;
     list<int> B{b};
-    int B_length = 0;
+    B_length = 0;
     
     vector<bool> taken(coords.size());
     taken[b] = taken[a] = true;
@@ -148,7 +149,6 @@ void Greedy_cycle::run(int a, int b)
 
     }
 
-    cycle_length = A_length + B_length;
     A_cycle = A;
     B_cycle = B;
 }
@@ -161,6 +161,8 @@ Greedy_cycle::Greedy_cycle(string file)
     coords = p.coords;
 
     int a,b;
+    A_length = 0;
+    B_length = 0;
 
     choose_random_starting(a,b);
     run(a,b);
