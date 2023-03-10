@@ -1,6 +1,7 @@
 #include "parser.hpp"
 #include <cstdlib>
 #include <list>
+#include <algorithm>
 
 class Greedy_2regret_cycle
 {
@@ -8,11 +9,11 @@ private:
     vector<vector<int>> matrix;
     vector<pair<double, double>> coords; 
     vector<bool> taken;
+    int calc_regret(vector<int> costs, int k = 2);
     
     
     void run();
     int next_pick(list<int>* A, list<int>* B);
-    int calc_regret(list<int>* B, int element);
 
     void choose_random_starting(int &a,int &b);
     int get_element(list<int>* _list, int index);
@@ -28,46 +29,17 @@ public:
     ~Greedy_2regret_cycle();
 };
 
-int Greedy_2regret_cycle::calc_regret(list<int>* B, int element)
+int Greedy_2regret_cycle::calc_regret(vector<int> costs, int k)
 {
-    int selected = -1;
-    int min_cost = -1;
+    int ret = 0;
 
-    int new_cost;
-    for(int j = 0; j < B->size(); j++)
+    for(int i=1; i < k && i < costs.size(); i++)
     {
-        pair<int,int> new_p;
-        new_p.first = get_element(B, j);
-        if(j+1 == B->size())
-            new_p.second = get_element(B, 0);//cycle[0];
-        else
-            new_p.second = get_element(B, j+1);//cycle[j+1]
-
-        for(int i = 0; i < coords.size(); i++)
-        {
-            if(!taken[i] && i!= element)
-            {
-                new_cost = matrix[new_p.first][i] + matrix[new_p.second][i] - matrix[new_p.first][new_p.second];
-
-                if(selected == -1)
-                {
-                    selected = i;
-                    min_cost = new_cost;
-                    continue;
-                }
-                
-                if(new_cost < min_cost)
-                {
-                    min_cost = new_cost;
-                    selected = i;
-                }
-            }    
-        }
+        ret += costs[0] - costs[k];
     }
 
-    return min_cost;
+    return ret;
 }
-
 
 int  Greedy_2regret_cycle::get_element(list<int>* _list, int index)
 {
@@ -91,60 +63,76 @@ void Greedy_2regret_cycle::choose_random_starting(int &a, int &b)
     }
 }
 
-
-
 int Greedy_2regret_cycle::next_pick(list<int>* A, list<int>* B)
 {
     
-    pair<int,int> min_p;
     int selected = -1;
-    int min_cost = -1;
-
-    int new_cost;
-    for(int j = 0; j < A->size(); j++)
+    pair<int,int> selected_p;
+    
+    int max_regret = -1;
+    
+    for(int i = 0; i < coords.size(); i++)
     {
-        pair<int,int> new_p;
-        new_p.first = get_element(A, j);
+        if(taken[i])
+            continue;
         
-        if(j+1 == A->size())
-            new_p.second = get_element(A, 0);//cycle[0];
-        else
-            new_p.second = get_element(A, j+1);//cycle[j+1]
+        vector<int> costs;
+        int min_cost = -1;
+        pair<int,int> min_p;
 
-        for(int i = 0; i < coords.size(); i++)
+        for(int j = 0; j < A->size(); j++)
         {
+            pair<int,int> new_p;
+            new_p.first = get_element(A, j);
             
-            if(!taken[i])
+            if(j+1 == A->size())
+                new_p.second = get_element(A, 0);//cycle[0];
+            else
+                new_p.second = get_element(A, j+1);//cycle[j+1]
+            
+            int new_cost = matrix[new_p.first][i] + matrix[new_p.second][i] - matrix[new_p.first][new_p.second];
+            costs.push_back(new_cost);
+            
+
+            if(min_cost == -1 || new_cost < min_cost)
             {
-                new_cost = matrix[new_p.first][i] + matrix[new_p.second][i] - matrix[new_p.first][new_p.second] - calc_regret(B,i);
+                min_cost = new_cost;
+                min_p = new_p;
+            }
+            
+        }
+        std::sort(costs.begin(), costs.end());
+        int new_regret = calc_regret(costs,2);
 
-                if(selected == -1)
-                {
-                    selected = i;
-                    min_cost = new_cost; 
-                    min_p = new_p;
-                    continue;
-                }
+        if(max_regret == -1 || max_regret < new_regret)
+        {
+            max_regret = new_regret;
+            selected_p = min_p;
+            selected = i;
+        }
 
-                
-                
-                if(new_cost < min_cost)
-                {
-                    min_p = new_p;
-                    min_cost = new_cost;
-                    selected = i;
-                }
+        // gdy zale sa rowne sprawdzamy koszty (ta sytuacja dzieje sie zawsze na poczatku)
+        else if(max_regret == new_regret)
+        {
+            int old_cost = matrix[selected_p.first][selected] + matrix[selected_p.second][selected] - matrix[selected_p.first][selected_p.second];
+            int new_cost = matrix[min_p.first][i] + matrix[min_p.second][i] - matrix[min_p.first][min_p.second];
+            if(old_cost > new_cost)
+            {
+                max_regret = new_regret;
+                selected_p = min_p;
+                selected = i;
             }
         }
+
     }
 
     list<int>::iterator it = A->begin();
-    advance(it,min_p.second);
+    advance(it,selected_p.second);
     A->insert(it,selected);
     taken[selected] = true;
     
     // zwracana jest wartosc o jaka nowy cykl jest dluzszy
-    return matrix[min_p.first][selected] + matrix[selected][min_p.second] - matrix[min_p.first][min_p.second];
+    return matrix[selected_p.first][selected] + matrix[selected][selected_p.second] - matrix[selected_p.first][selected_p.second];
 
 }
 
