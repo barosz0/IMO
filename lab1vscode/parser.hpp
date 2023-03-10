@@ -16,8 +16,8 @@ private:
     void read_data(string file);
     void make_matrix();
 public:
-    vector<vector<int>> matrix;
-    vector<pair<double, double>> coords; 
+    vector<vector<int> > matrix;
+    vector<pair<double, double> > coords; 
     parser(string file);
     ~parser();
 };
@@ -34,7 +34,7 @@ parser::~parser()
 
 void parser::read_data(string file_path)
 {
-    ifstream file_stream(file_path);
+    ifstream file_stream(file_path.c_str());
     if (!file_stream.is_open())
         throw std::runtime_error("Couldn't read! ");
 

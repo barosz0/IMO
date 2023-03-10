@@ -19,10 +19,21 @@ public:
     int B_length;
 
     void run(int a, int b);
-
+    vector<pair<double, double>> get_cycle_coords(list<int> cycle);
     Greedy_cycle(string file);
     ~Greedy_cycle();
 };
+
+vector<pair<double, double>> Greedy_cycle::get_cycle_coords(list<int> cycle)
+{
+    vector<pair<double, double>> cycle_coords;
+    list<int>::iterator i;
+    
+    for (i = cycle.begin(); i != cycle.end(); ++i)
+        cycle_coords.push_back(coords[*i]);
+
+    return (cycle_coords);
+}
 
 int Greedy_cycle::get_element(list<int> _list, int index)
 {

@@ -14,7 +14,7 @@ private:
     
     void run();
     int next_pick(list<int>* A, list<int>* B);
-
+    
     void choose_random_starting(int &a,int &b);
     int get_element(list<int>* _list, int index);
 
@@ -24,9 +24,21 @@ public:
     int A_length;
     int B_length;
 
+    vector<pair<double, double>> get_cycle_coords(list<int> cycle);
     Greedy_2regret_cycle(string file);
     ~Greedy_2regret_cycle();
 };
+
+vector<pair<double, double>> Greedy_2regret_cycle::get_cycle_coords(list<int> cycle)
+{
+    vector<pair<double, double>> cycle_coords;
+    list<int>::iterator i;
+    
+    for (i = cycle.begin(); i != cycle.end(); ++i)
+        cycle_coords.push_back(coords[*i]);
+
+    return (cycle_coords);
+}
 
 int Greedy_2regret_cycle::calc_regret(vector<int> costs, int k)
 {
