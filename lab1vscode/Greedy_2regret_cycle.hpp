@@ -25,9 +25,28 @@ public:
     int B_length;
 
     vector<pair<double, double>> get_cycle_coords(list<int> cycle);
+    int get_cycle_length(list<int> cycle);
+
     Greedy_2regret_cycle(string file);
+    Greedy_2regret_cycle(string file, int a);
     ~Greedy_2regret_cycle();
 };
+
+int Greedy_2regret_cycle::get_cycle_length(list<int> cycle)
+{
+    list<int>::iterator it = cycle.begin();
+    int pop = *it;
+    int sum = 0;
+
+    cycle.push_back(*it);
+    it++;
+
+    for (;it != cycle.end(); ++it){
+        sum+=matrix[pop][*it];
+        pop = *it;
+        }
+    return sum;
+}
 
 vector<pair<double, double>> Greedy_2regret_cycle::get_cycle_coords(list<int> cycle)
 {
@@ -163,6 +182,7 @@ void Greedy_2regret_cycle::run()
         *a_len += next_pick(A,B);
         swap(A,B);
         swap(a_len,b_len);
+            
         // printf("\rPozostalo: %d   ", coords.size() - (A->size() + B->size()));
         // cout<< A->size() + B->size() << endl;
     }
@@ -179,6 +199,34 @@ Greedy_2regret_cycle::Greedy_2regret_cycle(string file)
     int a,b;
 
     choose_random_starting(a,b);
+
+    A_cycle = list<int>{a};
+    A_length = 0;
+
+    B_cycle = list<int>{b};
+    B_length = 0;
+
+    taken = vector<bool>(coords.size());
+    taken[b] = taken[a] = true;
+
+    run();
+}
+
+Greedy_2regret_cycle::Greedy_2regret_cycle(string file, int a)
+{
+    parser p(file);
+
+    matrix = p.matrix;
+    coords = p.coords;
+
+    int b = 0;
+    for(int i = 1; i < coords.size(); i++)
+    {
+        if(matrix[a][b] < matrix[a][i])
+        {
+            b = i;
+        }
+    }
 
     A_cycle = list<int>{a};
     A_length = 0;

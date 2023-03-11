@@ -23,9 +23,28 @@ public:
 
     void run(int a, int b);
     vector<pair<double, double>> get_cycle_coords(list<int> cycle);
+    int get_cycle_length(list<int> cycle);
+    
     Greedy_cycle(string file);
+    Greedy_cycle(string file, int a);
     ~Greedy_cycle();
 };
+
+int Greedy_cycle::get_cycle_length(list<int> cycle)
+{
+    list<int>::iterator it = cycle.begin();
+    int pop = *it;
+    int sum = 0;
+
+    cycle.push_back(*it);
+    it++;
+
+    for (;it != cycle.end(); ++it){
+        sum+=matrix[pop][*it];
+        pop = *it;
+        }
+    return sum;
+}
 
 vector<pair<double, double>> Greedy_cycle::get_cycle_coords(list<int> cycle)
 {
@@ -108,8 +127,6 @@ void Greedy_cycle::choose_random_starting(int &a, int &b)
 
 void Greedy_cycle::run(int a, int b)
 {
-
-    cout <<"Zaczynam od a:" << a << " b:" << b << endl;
     list<int> A{a};
     A_length = 0;
     list<int> B{b};
@@ -181,6 +198,28 @@ Greedy_cycle::Greedy_cycle(string file)
     B_length = 0;
 
     choose_random_starting(a,b);
+    run(a,b);
+}
+
+Greedy_cycle::Greedy_cycle(string file, int a)
+{
+    parser p(file);
+
+    matrix = p.matrix;
+    coords = p.coords;
+
+
+    A_length = 0;
+    B_length = 0;
+
+    int b = 0;
+    for(int i = 1; i < coords.size(); i++)
+    {
+        if(matrix[a][b] < matrix[a][i])
+        {
+            b = i;
+        }
+    }
     run(a,b);
 }
 

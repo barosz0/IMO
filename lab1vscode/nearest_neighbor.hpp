@@ -21,9 +21,28 @@ public:
 
     void run(int a, int b);
     vector<pair<double, double>> get_cycle_coords(list<int> cycle);
+    int get_cycle_length(list<int> cycle);
+
     Nearest_neighbor(string file);
+    Nearest_neighbor(string file, int a);
     ~Nearest_neighbor();
 };
+
+int Nearest_neighbor::get_cycle_length(list<int> cycle)
+{
+    list<int>::iterator it = cycle.begin();
+    int pop = *it;
+    int sum = 0;
+
+    cycle.push_back(*it);
+    it++;
+
+    for (;it != cycle.end(); ++it){
+        sum+=matrix[pop][*it];
+        pop = *it;
+        }
+    return sum;
+}
 
 vector<pair<double, double>> Nearest_neighbor::get_cycle_coords(list<int> cycle)
 {
@@ -51,14 +70,13 @@ int Nearest_neighbor::next_pick(vector<bool> taken, int last_node)
     for(int j = 0; j < matrix[last_node].size(); j++)
     {
         if(!taken[j]){
-
-             cost = matrix[last_node][j];
+            cost = matrix[last_node][j];
                 
-                if(cost < min_cost)
-                {
-                    min_cost = cost;
-                    selected = j;
-                }
+            if(cost < min_cost)
+            {
+                min_cost = cost;
+                selected = j;
+            }
 
         }
     }
@@ -83,7 +101,7 @@ void Nearest_neighbor::choose_random_starting(int &a, int &b)
 void Nearest_neighbor::run(int a, int b)
 {
 
-    cout <<"Zaczynam od a:" << a << " b:" << b << endl;
+    // cout <<"Zaczynam od a:" << a << " b:" << b << endl;
     list<int> A{a};
     A_length = 0;
     list<int> B{b};
@@ -92,7 +110,7 @@ void Nearest_neighbor::run(int a, int b)
     vector<bool> taken(coords.size());
     taken[b] = taken[a] = true;
 
-    int a_last, b_last;
+    int a_last=a, b_last=b;
     int a_cost, b_cost; 
 
     while(A.size() + B.size() < coords.size())
@@ -113,11 +131,14 @@ void Nearest_neighbor::run(int a, int b)
         B.push_back(b);
 
         a_last = a;
-        b_last =b;
+        b_last = b;
         
 
     }
 
+    A_length += matrix[a_last][A.front()];
+    B_length += matrix[b_last][B.front()];
+    
     A_cycle = A;
     B_cycle = B;
 }
@@ -134,6 +155,28 @@ Nearest_neighbor::Nearest_neighbor(string file)
     B_length = 0;
 
     choose_random_starting(a,b);
+    run(a,b);
+}
+
+Nearest_neighbor::Nearest_neighbor(string file, int a)
+{
+    parser p(file);
+
+    matrix = p.matrix;
+    coords = p.coords;
+
+    A_length = 0;
+    B_length = 0;
+
+    int b = 0;
+    for(int i = 1; i < coords.size(); i++)
+    {
+        if(matrix[a][b] < matrix[a][i])
+        {
+            b = i;
+        }
+    }
+
     run(a,b);
 }
 
