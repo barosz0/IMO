@@ -1,6 +1,9 @@
 #include "parser.hpp"
 #include <cstdlib>
 #include <list>
+#include <algorithm>
+
+using namespace std;
 
 class Greedy_cycle
 {
@@ -148,12 +151,14 @@ void Greedy_cycle::run(int a, int b)
         A_length += a_cost;
         B_length += b_cost;
 
-        list<int>::iterator it = A.begin();
-        advance(it,a_place.second);
+        // list<int>::iterator it = A.begin();
+        // advance(it,a_place.second);
+        list<int>::iterator it = std::find(A.begin(), A.end(), a_place.second);
         A.insert(it,a);
         
-        it = B.begin();
-        advance(it,b_place.second);
+        // it = B.begin();
+        // advance(it,b_place.second);
+        it = std::find(B.begin(), B.end(), b_place.second);
         B.insert(it,b);
 
         

@@ -137,8 +137,9 @@ int Greedy_2regret_cycle::next_pick(list<int>* A, list<int>* B)
 
     }
 
-    list<int>::iterator it = A->begin();
-    advance(it,selected_p.second);
+    // list<int>::iterator it = A->begin();
+    // advance(it,selected_p.second);
+    list<int>::iterator it = std::find(A->begin(), A->end(), selected_p.second);
     A->insert(it,selected);
     taken[selected] = true;
     
