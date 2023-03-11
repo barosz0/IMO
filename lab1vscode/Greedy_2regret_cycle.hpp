@@ -46,7 +46,7 @@ int Greedy_2regret_cycle::calc_regret(vector<int> costs, int k)
 
     for(int i=1; i < k && i < costs.size(); i++)
     {
-        ret += abs(costs[0] - costs[k]);
+        ret += abs(costs[0] - costs[i]);
     }
 
     return ret;
@@ -88,7 +88,7 @@ int Greedy_2regret_cycle::next_pick(list<int>* A, list<int>* B)
             continue;
         
         vector<int> costs;
-        int min_cost = -1;
+        int min_cost = INT_MAX;
         pair<int,int> min_p;
 
         for(int j = 0; j < A->size(); j++)
@@ -105,7 +105,7 @@ int Greedy_2regret_cycle::next_pick(list<int>* A, list<int>* B)
             costs.push_back(new_cost);
             
 
-            if(min_cost == -1 || new_cost < min_cost)
+            if(min_cost == INT_MAX || new_cost < min_cost)
             {
                 min_cost = new_cost;
                 min_p = new_p;
