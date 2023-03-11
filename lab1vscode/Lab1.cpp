@@ -37,6 +37,31 @@ void show_coords_list(vector<pair<double, double>> cycle_coords )
 
 }
 
+void save_coords_list(vector<pair<double, double>> cycle_coords_A,vector<pair<double, double>> cycle_coords_B, string filename)
+{
+    ofstream output_file;
+    output_file.open (filename);
+    // myfile << "Writing this to a file.\n";
+
+    for(int j = 0; j < cycle_coords_A.size(); j++){
+        output_file <<  cycle_coords_A[j].first << " " << cycle_coords_A[j].second;
+        if (j != cycle_coords_A.size() -1 )
+            output_file <<';';
+    }
+
+    output_file << "\n"; 
+    
+    
+    for(int j = 0; j < cycle_coords_B.size(); j++){
+        output_file <<  cycle_coords_B[j].first << " " << cycle_coords_B[j].second;
+        if (j != cycle_coords_B.size() -1 )
+            output_file <<';';
+    }
+
+
+    output_file.close();
+}
+
 void greedy_cycle_run()
 {
     cout << "Greedy cycle Algorithm" << endl;
@@ -45,17 +70,19 @@ void greedy_cycle_run()
     cout << "---------------end---------------" << endl;
 
     cout << "Cykl A:" << endl;
-    showlist(cycle.A_cycle);
+    // showlist(cycle.A_cycle);
     cout << "Dlugosc :" << cycle.A_length << endl;
     cout << "Kolejne wspolrzedne cyklu A" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
 
 
     cout << "Cykl B:" << endl;
-    showlist(cycle.B_cycle);
+    // showlist(cycle.B_cycle);
     cout << "Dlugosc :" << cycle.B_length << endl;
     cout << "Kolejne wspolrzedne cyklu B" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+
+    save_coords_list(cycle.get_cycle_coords(cycle.A_cycle),cycle.get_cycle_coords(cycle.B_cycle), "output/greedy_cycle.data");
 }
 
 void greedy_2regret_cycle_run()
@@ -66,36 +93,40 @@ void greedy_2regret_cycle_run()
     cout << "---------------end---------------" << endl;
 
     cout << "Cykl A:" << endl;
-    showlist(cycle.A_cycle);
+    // showlist(cycle.A_cycle);
     cout << "Dlugosc :" << cycle.A_length << endl;
     cout << "Kolejne wspolrzedne cyklu A" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
 
     cout << "Cykl B:" << endl;
-    showlist(cycle.B_cycle);
+    // showlist(cycle.B_cycle);
     cout << "Dlugosc :" << cycle.B_length << endl;
     cout << "Kolejne wspolrzedne cyklu B" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+
+    save_coords_list(cycle.get_cycle_coords(cycle.A_cycle),cycle.get_cycle_coords(cycle.B_cycle), "output/greedy_2regret_cycle.data");
 }
 
 void Nearest_neighbor_run()
 {
-    cout << "Nearest_neighbor cycle Algorithm" << endl;
+    cout << "Nearest neighbor Algorithm" << endl;
     cout << "---------------start---------------" << endl;
     Nearest_neighbor cycle("Data/kroB100.tsp");
     cout << "---------------end---------------" << endl;
 
     cout << "Cykl A:" << endl;
-    showlist(cycle.A_cycle);
+    // showlist(cycle.A_cycle);
     cout << "Dlugosc :" << cycle.A_length << endl;
     cout << "Kolejne wspolrzedne cyklu A" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.A_cycle));
 
     cout << "Cykl B:" << endl;
-    showlist(cycle.B_cycle);
+    // showlist(cycle.B_cycle);
     cout << "Dlugosc :" << cycle.B_length << endl;
     cout << "Kolejne wspolrzedne cyklu B" << endl;
-    show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+    // show_coords_list(cycle.get_cycle_coords(cycle.B_cycle));
+
+    save_coords_list(cycle.get_cycle_coords(cycle.A_cycle),cycle.get_cycle_coords(cycle.B_cycle), "output/nearest_neighbor.data");
 }
 
 int main()
