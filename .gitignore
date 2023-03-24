@@ -1,2 +1,7 @@
 lab2/a.exe
 .vscode/settings.json
+lab2/Cycle_abstract.hpp.gch
+lab2/Greedy_2regret_cycle.hpp.gch
+lab2/Local_search_abstract.hpp.gch
+lab2/Local_search_steepest.hpp.gch
+lab2/parser.hpp.gch
