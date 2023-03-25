@@ -97,7 +97,7 @@ void Local_search_abstract::recalculate_length()
 
 int Local_search_abstract::get_length()
 {
-    
+    recalculate_length();
     return A_length + B_length;
 }
 
