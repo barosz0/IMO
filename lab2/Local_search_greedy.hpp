@@ -30,7 +30,7 @@ public:
 
 void Local_search_greedy::run()
 {
-    while(make_step()) cout << moves++ << ". " << get_length() << endl;
+    while(make_step())moves++;// cout << moves++ << ". " << get_length() << endl;
 }
 
 bool Local_search_greedy::make_step()
@@ -86,7 +86,7 @@ bool Local_search_greedy::make_step()
 
             if (new_len < 0)
             {
-                cout << "Zamiana inter: " << a << " " << b << " " << new_len << endl;
+                // cout << "Zamiana inter: " << a << " " << b << " " << new_len << endl;
                 swap(A_cycle[a],B_cycle[b]);
                 return true;
             }
@@ -100,111 +100,190 @@ bool Local_search_greedy::make_step()
                 }
             }
         }
-        
-        // inter change VERTEX_NEIGHBORHOOD A
-        if(move == 1 && inner_Aa < A_cycle.size())
+        if(neighborhood_type == VERTEX_NEIGHBORHOOD)
         {
-            
-            int a = min(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
-            int b = max(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
-
-            pair<int,int> neigh_A = get_adjacent_vertex(A_cycle, a);
-            pair<int,int> neigh_B = get_adjacent_vertex(A_cycle, b);
-
-            int new_len = 0;
-            
-
-            new_len -= matrix[neigh_A.first][A_cycle[a]] + matrix[A_cycle[a]][neigh_A.second];
-            new_len -= matrix[neigh_B.first][A_cycle[b]] + matrix[A_cycle[b]][neigh_B.second];
-
-            if(neigh_A.second == A_cycle[b])
+            // inner change VERTEX_NEIGHBORHOOD A
+            if(move == 1 && inner_Aa < A_cycle.size())
             {
-                new_len += matrix[neigh_A.first][A_cycle[b]] + matrix[A_cycle[b]][A_cycle[a]];
-                new_len += matrix[A_cycle[a]][neigh_B.second] + matrix[A_cycle[a]][A_cycle[b]];
                 
-            }
-            else if(neigh_B.second == A_cycle[a])
-            {
-                new_len += matrix[A_cycle[b]][neigh_A.second] + matrix[A_cycle[b]][A_cycle[a]];
-                new_len += matrix[neigh_B.first][A_cycle[a]] + matrix[A_cycle[b]][A_cycle[a]];
-            }
-            else
-            {
-                new_len += matrix[neigh_A.first][A_cycle[b]] + matrix[A_cycle[b]][neigh_A.second];
-                new_len += matrix[neigh_B.first][A_cycle[a]] + matrix[A_cycle[a]][neigh_B.second];
+                int a = min(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
+                int b = max(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
+
+                pair<int,int> neigh_A = get_adjacent_vertex(A_cycle, a);
+                pair<int,int> neigh_B = get_adjacent_vertex(A_cycle, b);
+
+                int new_len = 0;
+                
+
+                new_len -= matrix[neigh_A.first][A_cycle[a]] + matrix[A_cycle[a]][neigh_A.second];
+                new_len -= matrix[neigh_B.first][A_cycle[b]] + matrix[A_cycle[b]][neigh_B.second];
+
+                if(neigh_A.second == A_cycle[b])
+                {
+                    new_len += matrix[neigh_A.first][A_cycle[b]] + matrix[A_cycle[b]][A_cycle[a]];
+                    new_len += matrix[A_cycle[a]][neigh_B.second] + matrix[A_cycle[a]][A_cycle[b]];
+                    
+                }
+                else if(neigh_B.second == A_cycle[a])
+                {
+                    new_len += matrix[A_cycle[b]][neigh_A.second] + matrix[A_cycle[b]][A_cycle[a]];
+                    new_len += matrix[neigh_B.first][A_cycle[a]] + matrix[A_cycle[b]][A_cycle[a]];
+                }
+                else
+                {
+                    new_len += matrix[neigh_A.first][A_cycle[b]] + matrix[A_cycle[b]][neigh_A.second];
+                    new_len += matrix[neigh_B.first][A_cycle[a]] + matrix[A_cycle[a]][neigh_B.second];
+                }
+
+                if(new_len < 0)
+                {
+                    // cout << "Zamiana A: " << a << " " << b << " " << new_len << endl;
+                    swap(A_cycle[a],A_cycle[b]);
+                    return true;
+                }
+
+                inner_Ab++;
+                if(inner_Ab >= A_cycle.size())
+                {
+                    inner_Aa++;
+                    inner_Ab=inner_Aa+1;
+                    if(inner_Ab >= A_cycle.size()) inner_Aa = A_cycle.size();
+                }
             }
 
-            if(new_len < 0)
+            // inner change VERTEX_NEIGHBORHOOD B
+            if(move == 2 && inner_Ba < B_cycle.size())
             {
-                cout << "Zamiana A: " << a << " " << b << " " << new_len << endl;
-                swap(A_cycle[a],A_cycle[b]);
-                return true;
-            }
+                int a = min(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
+                int b = max(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
 
-            inner_Ab++;
-            if(inner_Ab >= A_cycle.size())
+                pair<int,int> neigh_A = get_adjacent_vertex(B_cycle, a);
+                pair<int,int> neigh_B = get_adjacent_vertex(B_cycle, b);
+
+                int new_len = 0;
+
+                new_len -= matrix[neigh_A.first][B_cycle[a]] + matrix[B_cycle[a]][neigh_A.second];
+
+                new_len -= matrix[neigh_B.first][B_cycle[b]] + matrix[B_cycle[b]][neigh_B.second];
+                
+                if(neigh_A.second == B_cycle[b])
+                {
+                    new_len += matrix[neigh_A.first][B_cycle[b]] + matrix[B_cycle[b]][B_cycle[a]];
+                    new_len += matrix[B_cycle[a]][neigh_B.second] + matrix[B_cycle[a]][B_cycle[b]];
+                    
+                }
+                else if(neigh_B.second == B_cycle[a])
+                {
+                    new_len += matrix[B_cycle[b]][neigh_A.second] + matrix[B_cycle[b]][B_cycle[a]];
+                    new_len += matrix[neigh_B.first][B_cycle[a]] + matrix[B_cycle[b]][B_cycle[a]];
+                }
+                else
+                {
+                    new_len += matrix[neigh_A.first][B_cycle[b]] + matrix[B_cycle[b]][neigh_A.second];
+                    new_len += matrix[neigh_B.first][B_cycle[a]] + matrix[B_cycle[a]][neigh_B.second];
+                }
+
+                if(new_len < 0)
+                {
+                    // cout << "Zamiana B: " << a << " " << b <<" " << new_len << endl;
+                    swap(B_cycle[a],B_cycle[b]);
+                    return true;
+                }
+
+                inner_Bb++;
+                if(inner_Bb >= B_cycle.size())
+                {
+                    inner_Ba++;
+                    inner_Bb=inner_Ba+1;
+
+                    if(inner_Bb >= B_cycle.size()) inner_Ba = B_cycle.size();
+                }
+            }
+        }else if (neighborhood_type == EDGE_NEIGHBORHOOD)
+        {
+            if(move == 1 && inner_Aa < A_cycle.size())
             {
-                inner_Aa++;
-                inner_Ab=inner_Aa+1;
-                if(inner_Ab >= A_cycle.size()) inner_Aa = A_cycle.size();
+                int a = min(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
+                int b = max(shuffle_A_cycle[inner_Aa],shuffle_A_cycle[inner_Ab]);
+
+                int new_len = 0;
+
+                new_len -= matrix[A_cycle[a]][A_cycle[a+1]];
+                if(b + 1 < A_cycle.size())
+                    new_len -= matrix[A_cycle[b]][A_cycle[b+1]];
+                else // ostatnia krawedz
+                    new_len -= matrix[A_cycle[b]][A_cycle[0]];
+
+                new_len += matrix[A_cycle[a]][A_cycle[b]];
+                if(b + 1 < A_cycle.size())
+                    new_len += matrix[A_cycle[a+1]][A_cycle[b+1]];
+                else
+                    new_len += matrix[A_cycle[a+1]][A_cycle[0]];
+                
+                if(new_len < 0)
+                {
+                    // cout << "Zamiana A: " << a << " " << b <<" " << new_len << endl;
+                    reverse(A_cycle.begin()+a+1,A_cycle.begin()+b+1 );
+                    return true;
+                }
+
+                inner_Ab++;
+                if(inner_Ab >= A_cycle.size())
+                {
+                    inner_Aa++;
+                    inner_Ab=inner_Aa+1;
+
+                    if(inner_Ab >= A_cycle.size()) inner_Aa = A_cycle.size();
+                }
+
+            }
+            
+            if(move == 2 && inner_Ba < B_cycle.size())
+            {
+                int a = min(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
+                int b = max(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
+
+                int new_len = 0;
+
+                new_len -= matrix[B_cycle[a]][B_cycle[a+1]];
+                if(b + 1 < B_cycle.size())
+                    new_len -= matrix[B_cycle[b]][B_cycle[b+1]];
+                else // ostatnia krawedz
+                    new_len -= matrix[B_cycle[b]][B_cycle[0]];
+
+                new_len += matrix[B_cycle[a]][B_cycle[b]];
+                if(b + 1 < B_cycle.size())
+                    new_len += matrix[B_cycle[a+1]][B_cycle[b+1]];
+                else
+                    new_len += matrix[B_cycle[a+1]][B_cycle[0]];
+                
+                if(new_len < 0)
+                {
+                    // cout << "Zamiana B: " << a << " " << b <<" " << new_len << endl;
+                    reverse(B_cycle.begin()+a+1,B_cycle.begin()+b+1 );
+                    return true;
+                }
+
+                inner_Bb++;
+                if(inner_Bb >= B_cycle.size())
+                {
+                    inner_Ba++;
+                    inner_Bb=inner_Ba+1;
+
+                    if(inner_Bb >= B_cycle.size()) inner_Ba = B_cycle.size();
+                }
+
             }
         }
-
-        // inter change VERTEX_NEIGHBORHOOD B
-        if(move == 2 && inner_Ba < B_cycle.size())
-        {
-            int a = min(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
-            int b = max(shuffle_B_cycle[inner_Ba],shuffle_B_cycle[inner_Bb]);
-
-            pair<int,int> neigh_A = get_adjacent_vertex(B_cycle, a);
-            pair<int,int> neigh_B = get_adjacent_vertex(B_cycle, b);
-
-            int new_len = 0;
-
-            new_len -= matrix[neigh_A.first][B_cycle[a]] + matrix[B_cycle[a]][neigh_A.second];
-
-            new_len -= matrix[neigh_B.first][B_cycle[b]] + matrix[B_cycle[b]][neigh_B.second];
-            
-            if(neigh_A.second == B_cycle[b])
-            {
-                new_len += matrix[neigh_A.first][B_cycle[b]] + matrix[B_cycle[b]][B_cycle[a]];
-                new_len += matrix[B_cycle[a]][neigh_B.second] + matrix[B_cycle[a]][B_cycle[b]];
-                
-            }
-            else if(neigh_B.second == B_cycle[a])
-            {
-                new_len += matrix[B_cycle[b]][neigh_A.second] + matrix[B_cycle[b]][B_cycle[a]];
-                new_len += matrix[neigh_B.first][B_cycle[a]] + matrix[B_cycle[b]][B_cycle[a]];
-            }
-            else
-            {
-                new_len += matrix[neigh_A.first][B_cycle[b]] + matrix[B_cycle[b]][neigh_A.second];
-                new_len += matrix[neigh_B.first][B_cycle[a]] + matrix[B_cycle[a]][neigh_B.second];
-            }
-
-            if(new_len < 0)
-            {
-                cout << "Zamiana B: " << a << " " << b <<" " << new_len << endl;
-                swap(B_cycle[a],B_cycle[b]);
-                return true;
-            }
-
-            inner_Bb++;
-            if(inner_Bb >= B_cycle.size())
-            {
-                inner_Ba++;
-                inner_Bb=inner_Ba+1;
-
-                if(inner_Bb >= B_cycle.size()) inner_Ba = B_cycle.size();
-            }
-        }
-        
-        
     }
 }
 
 Local_search_greedy::Local_search_greedy(Cycle_abstract *cycle, int _neighborhood_type) : Local_search_abstract(cycle)
 {
+    if(_neighborhood_type != EDGE_NEIGHBORHOOD && _neighborhood_type != VERTEX_NEIGHBORHOOD)
+    {
+        throw runtime_error("Nieznany typ sasiedztwa.");
+    }
     neighborhood_type = _neighborhood_type;
 
     run();
