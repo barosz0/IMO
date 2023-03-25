@@ -26,11 +26,17 @@ public:
     vector<pair<double, double>> get_cycle_coords(list<int> cycle);
     vector<vector<int>> get_matrix();
     vector<pair<double, double>> get_coords();
+    int get_length();
     
     Cycle_abstract(string file);
     Cycle_abstract(string file, int a);
     ~Cycle_abstract();
 };
+
+int Cycle_abstract::get_length()
+{
+    return get_cycle_length(A_cycle) + get_cycle_length(B_cycle);
+}
 
 vector<vector<int>> Cycle_abstract::get_matrix()
 {
