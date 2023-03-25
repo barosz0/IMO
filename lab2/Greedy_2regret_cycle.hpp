@@ -1,7 +1,8 @@
 #include "Cycle_abstract.hpp"
 
-
-class Greedy_2regret_cycle: private Cycle_abstract
+#ifndef Greedy_2REGRET
+#define Greedy_2REGRET
+class Greedy_2regret_cycle: public Cycle_abstract
 {
 private:
     
@@ -142,8 +143,10 @@ void Greedy_2regret_cycle::run()
 Greedy_2regret_cycle::Greedy_2regret_cycle(string file): Cycle_abstract(file)
 {run();}
 
-Greedy_2regret_cycle::Greedy_2regret_cycle(string file, int a) : Cycle_abstract(file)
+Greedy_2regret_cycle::Greedy_2regret_cycle(string file, int a) : Cycle_abstract(file, a)
 {run();}
 
 Greedy_2regret_cycle::~Greedy_2regret_cycle()
 {}
+
+#endif
