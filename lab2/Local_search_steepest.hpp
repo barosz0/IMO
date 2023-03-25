@@ -1,8 +1,13 @@
 #ifndef LS_STEEPEST
 #define LS_STEEPEST
 
+#ifndef VERTEX_NEIGHBORHOOD
 #define VERTEX_NEIGHBORHOOD 1667
+#endif
+
+#ifndef EDGE_NEIGHBORHOOD
 #define EDGE_NEIGHBORHOOD 1666
+#endif
 
 #include "Local_search_abstract.hpp"
 
@@ -23,8 +28,8 @@ public:
 
 void Local_search_steepest::run()
 {
-    recalculate_length();
-    while(make_step());// cout << moves++ << endl;
+    // recalculate_length();
+    while(make_step()) moves++;// cout << moves++ << endl;
 }
 
 bool Local_search_steepest::make_step()
@@ -125,9 +130,9 @@ bool Local_search_steepest::make_step()
         // porownanie i zamiana
         if(intercycle_len < min_len)
         {
-            int len = A_length + B_length;
+            // int len = A_length + B_length;
             swap(A_cycle[intercycle_change.first],B_cycle[intercycle_change.second]);
-            recalculate_length();
+            // recalculate_length();
         }
         else
         {
@@ -215,3 +220,4 @@ Local_search_steepest::~Local_search_steepest()
 
 
 #endif
+
