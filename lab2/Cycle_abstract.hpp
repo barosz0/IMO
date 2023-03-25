@@ -25,6 +25,7 @@ public:
     int get_cycle_length(list<int> cycle);
     vector<pair<double, double>> get_cycle_coords(list<int> cycle);
     vector<vector<int>> get_matrix();
+    vector<pair<double, double>> get_coords();
     
     Cycle_abstract(string file);
     Cycle_abstract(string file, int a);
@@ -34,6 +35,11 @@ public:
 vector<vector<int>> Cycle_abstract::get_matrix()
 {
     return matrix;
+}
+
+vector<pair<double, double>> Cycle_abstract::get_coords()
+{
+    return coords;
 }
 
 vector<pair<double, double>> Cycle_abstract::get_cycle_coords(list<int> cycle)
@@ -88,6 +94,8 @@ Cycle_abstract::Cycle_abstract(string file)
     int a,b;
 
     choose_random_starting(a,b);
+
+    cout << "Random start a: "<< a << endl;
 
     A_cycle = list<int>{a};
     A_length = 0;
