@@ -1,4 +1,4 @@
-#ifndef _STEEPEST
+#ifndef LS_STEEPEST
 #define LS_STEEPEST
 
 #define VERTEX_NEIGHBORHOOD 1667
@@ -11,7 +11,7 @@ class Local_search_steepest: public Local_search_abstract
 private:
     /* data */
     int neighborhood_type;
-    pair<int,int> get_adjacent_vertex(vector<int> v, int index);
+    
     void run() override;
     bool make_step();
     
@@ -20,31 +20,6 @@ public:
     Local_search_steepest(Cycle_abstract *cycle, int _neighborhood_type = VERTEX_NEIGHBORHOOD);
     ~Local_search_steepest();
 };
-
-
-
-pair<int,int>  Local_search_steepest::get_adjacent_vertex(vector<int> v, int index)
-{
-    pair<int,int> ret;
-
-    if(index==0)
-    {
-        ret.first = v.back();
-        ret.second = v[index+1];
-    }
-    else if (index==v.size()-1)
-    {
-        ret.first = v[index-1];
-        ret.second = v[0];
-    }
-    else
-    {
-        ret.first = v[index-1];
-        ret.second = v[index+1];
-    }
-
-    return ret;
-}
 
 void Local_search_steepest::run()
 {

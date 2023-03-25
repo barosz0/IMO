@@ -15,6 +15,7 @@ protected:
     int A_length;
     int B_length;
     int moves;
+    pair<int,int> get_adjacent_vertex(vector<int> v, int index);
 
     void recalculate_length();
     virtual void run() = 0;
@@ -30,6 +31,29 @@ public:
     ~Local_search_abstract();
     
 };
+
+pair<int,int>  Local_search_abstract::get_adjacent_vertex(vector<int> v, int index)
+{
+    pair<int,int> ret;
+
+    if(index==0)
+    {
+        ret.first = v.back();
+        ret.second = v[index+1];
+    }
+    else if (index==v.size()-1)
+    {
+        ret.first = v[index-1];
+        ret.second = v[0];
+    }
+    else
+    {
+        ret.first = v[index-1];
+        ret.second = v[index+1];
+    }
+
+    return ret;
+}
 
 vector<pair<double, double>> Local_search_abstract::get_A_coords()
 {
