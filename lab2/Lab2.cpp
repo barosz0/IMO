@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Greedy_2regret_cycle.hpp"
 #include "Local_search_steepest.hpp"
+#include "Local_search_greedy.hpp"
 
 
 using namespace std;
@@ -35,7 +36,7 @@ int main()
     
     Greedy_2regret_cycle cycle("Data/kroB100.tsp", 14);
     cout << "Przed: " <<cycle.A_length + cycle.B_length << endl;
-    Local_search_steepest LS(&cycle, VERTEX_NEIGHBORHOOD);
+    Local_search_greedy LS(&cycle, VERTEX_NEIGHBORHOOD);
     cout << "Po: " << LS.get_length() << endl;
     save_coords_list(cycle.get_cycle_coords(cycle.A_cycle), cycle.get_cycle_coords(cycle.B_cycle), "output/before.data");
     save_coords_list(LS.get_A_coords(), LS.get_B_coords(), "output/after.data");
