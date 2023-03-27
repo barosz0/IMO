@@ -101,7 +101,7 @@ Cycle_abstract::Cycle_abstract(string file)
 
     choose_random_starting(a,b);
 
-    cout << "Random start a: "<< a << endl;
+    //cout << "Random start a: "<< a << endl;
 
     A_cycle = list<int>{a};
     A_length = 0;
