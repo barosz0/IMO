@@ -260,18 +260,17 @@ int Memory_search::check_posible(move_data move)
         pair<int,int> neigh_A = get_adjacent_vertex(cycle, a_index);
         pair<int,int> neigh_B = get_adjacent_vertex(cycle, b_index);
 
-        printf("%d %d\n",neigh_A != move.neigh_A,neigh_B != move.neigh_B);
+        // printf("%d %d\n",neigh_A != move.neigh_A,neigh_B != move.neigh_B);
 
-        printf("A: (%d,%d), (%d,%d)\n",move.neigh_A.first,move.neigh_A.second,neigh_A.first,neigh_A.second);
-        printf("B: (%d,%d), (%d,%d)\n",move.neigh_B.first,move.neigh_B.second,neigh_B.first,neigh_B.second);
-        printf("order a: %d, order b: %d\n", a_order, b_order);
+        // printf("A: (%d,%d), (%d,%d)\n",move.neigh_A.first,move.neigh_A.second,neigh_A.first,neigh_A.second);
+        // printf("B: (%d,%d), (%d,%d)\n",move.neigh_B.first,move.neigh_B.second,neigh_B.first,neigh_B.second);
+        // printf("order a: %d, order b: %d\n", a_order, b_order);
 
         if(move.neigh_A.second != neigh_A.first && move.neigh_A.second != neigh_A.second) return 0; // nie zgadza sie nastepnik
         if(move.neigh_B.second != neigh_B.first && move.neigh_B.second != neigh_B.second) return 0; // nie zgadza sie nastepnik
 
         if(a_order == b_order)
         {
-            printf("ORDER: %d\n", a_order);
             return 1;
         }
         else
@@ -319,8 +318,6 @@ void Memory_search::generate_moves_outer(int index_a, int which_cycle)
                 }
                 m.diff = new_len;
                 m.type = OUTER_CHANGE;
-                // m.which_cycle = which_cycle;
-                // printf("push %d, %d \n", m.a,m.b);
                 moves.push(m);
 
             }
@@ -385,14 +382,14 @@ void Memory_search::generate_moves_inner(int index_a, int which_cycle)
 
 void Memory_search::make_move(move_data move)
 {
-    printf("Diff: %d\n", move.diff);
+    // printf("Diff: %d\n", move.diff);
     if(move.type == OUTER_CHANGE)
     {
         int index_a = getIndex(A_cycle,move.a);
         int index_b = getIndex(B_cycle,move.b);
 
         swap(A_cycle[index_a],B_cycle[index_b]);
-        printf("Swap %d %d\n",index_a, index_b);
+        // printf("Swap %d %d\n",index_a, index_b);
 
         int a_prev = (index_a==0) ? A_cycle.size()-1 : index_a-1;
         int b_prev = (index_b==0) ? B_cycle.size()-1 : index_b-1;
@@ -425,32 +422,12 @@ void Memory_search::make_move(move_data move)
         int index_a = getIndex(cycle,move.a);
         int index_b = getIndex(cycle,move.b);
 
-        printf("reverse %d %d\n", index_a+1, index_b+1);
+        // printf("reverse %d %d\n", index_a+1, index_b+1);
 
-        // if (index_a > index_b){
-        //     // swap(index_a,index_b);
-        //     // printf("swap true::: \n");
-        //     reverse(cycle.begin(),cycle.end());
-
-        //     int new_b = cycle.size()-1-index_b;
-        //     int new_a = cycle.size()-1-index_a;
-
-        //     // printf("swap reverse %d %d\n", new_a,new_b);
-
-        //     reverse(cycle.begin()+new_a+1,cycle.begin()+new_b+1);
-
-        //     reverse(cycle.begin(),cycle.end());
-        // }
-        // else{
-            
-        //     reverse(cycle.begin()+index_a+1,cycle.begin()+index_b+1);
-        // }
         if (index_a > index_b){
             swap(index_a,index_b);
             index_a -=1;
             index_b -=1;
-
-            printf("swap true::: \n");
         }
         reverse(cycle.begin()+index_a+1,cycle.begin()+index_b+1);
 
@@ -503,11 +480,11 @@ void Memory_search::run()
                 moves.push(moves_beta.top());
                 moves_beta.pop();
             }
-            printf("srodek %d\n", get_length());
-            if(get_length() - move.diff != len){
-                printf("Jest zle\n");
-                return;
-            }
+            // printf("srodek %d\n", get_length());
+            // if(get_length() - move.diff != len){
+            //     printf("Error\n");
+            //     return;
+            // }
             len = get_length();
         }
 
@@ -521,10 +498,16 @@ void Memory_search::run()
 
 Memory_search::Memory_search(Cycle_abstract *cycle) : Local_search_abstract(cycle)
 {
-    printf("Start: %d\n",get_length());
+    // printf("Start: %d\n",get_length());
     generate_all_moves();
     run();
-    printf("Koniec: %d\n",get_length());
+    int len = get_length();
+    generate_all_moves();
+    run();
+
+    if (get_length() != len)
+        printf("Error nie wszystkie ruchy");
+    // printf("Koniec: %d\n",get_length());
     // generate_all_moves();
     // run();
 }
