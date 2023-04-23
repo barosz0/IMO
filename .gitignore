@@ -16,3 +16,4 @@ lab3/parser.hpp.gch
 lab3/Memory_search.hpp.gch
 lab3/Local_search_abstract.hpp.gch
 lab3/Greedy_2regret_cycle.hpp.gch
+lab3/Random_cycle.hpp.gch

@@ -3,6 +3,7 @@
 #include "Local_search_steepest.hpp"
 #include "Local_search_greedy.hpp"
 #include "Memory_search.hpp"
+#include "Random_cycle.hpp"
 #include <chrono>
 
 
@@ -52,7 +53,7 @@ void make_data(string filename, int a)
 }
 
 template < class Cycle, class LS >
-void calc_data(string filename, int times = 1, string name = "", int type = VERTEX_NEIGHBORHOOD)
+void calc_data(string filename, int times = 1, string name = "", int type = EDGE_NEIGHBORHOOD)
 {
     vector<Cycle> cycles;
     int avg_start=0;
@@ -64,6 +65,9 @@ void calc_data(string filename, int times = 1, string name = "", int type = VERT
     
     long long time;
     int avg_len;
+    int min_len = 99999999;
+    int max_len = -1;
+    int len;
 
     cout << "-------" << name << "-------" << endl;
     
@@ -73,7 +77,10 @@ void calc_data(string filename, int times = 1, string name = "", int type = VERT
     {
         for(int t = 0; t < times; t++)
         {
-            avg_len += LS(&cycles[i], type).get_length();
+            len = LS(&cycles[i], type).get_length();
+            avg_len += len;
+            min_len = min(min_len,len);
+            max_len = max(max_len,len);
         }
     }
     auto stop = std::chrono::high_resolution_clock::now();
@@ -84,18 +91,63 @@ void calc_data(string filename, int times = 1, string name = "", int type = VERT
     cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
     cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Srednia poprawa:\t" << avg_start - avg_len << endl;
+    cout << "Minimalna dlugosc:\t" << min_len << endl;
+    cout << "Maksymalna dlugosc:\t" << max_len << endl;
+}
+
+template < class Cycle, class LS >
+void calc_data2(string filename, int times = 1, string name = "")
+{
+    vector<Cycle> cycles;
+    int avg_start=0;
+    for(int i = 0; i < 100; i++){
+        cycles.push_back(Cycle(filename,i));
+        avg_start += cycles[i].get_length();
+    }
+    avg_start/=100;
+    
+    long long time;
+    int avg_len;
+    int min_len = 99999999;
+    int max_len = -1;
+    int len;
+
+    cout << "-------" << name << "-------" << endl;
+    
+    avg_len = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    for(int i = 0; i < 100; i++)
+    {
+        for(int t = 0; t < times; t++)
+        {
+            len = LS(&cycles[i]).get_length();
+            avg_len += len;
+            min_len = min(min_len,len);
+            max_len = max(max_len,len);
+        }
+    }
+    auto stop = std::chrono::high_resolution_clock::now();
+    avg_len /= 100*times;
+    time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    time /= 100*times;
+
+    cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
+    cout << "Srednia dlugosc:\t" << avg_len << endl;
+    cout << "Srednia poprawa:\t" << avg_start - avg_len << endl;
+    cout << "Minimalna dlugosc:\t" << min_len << endl;
+    cout << "Maksymalna dlugosc:\t" << max_len << endl;
 }
 
 int main()
 {
     
-    make_data("Data/kroB100.tsp", 14);
-    // calc_data<Greedy_2regret_cycle, Local_search_steepest>("Data/kroB100.tsp",1,"Local Search Steepest Vertex Neighborhood");
-    // calc_data<Greedy_2regret_cycle, Local_search_greedy>("Data/kroB100.tsp",1,"Local Search Greedy Vertex Neighborhood");
+    // make_data("Data/kroB100.tsp", 14);
     // Greedy_2regret_cycle cycle("Data/kroB100.tsp");
     // Memory_search ms(&cycle);
     // printf("all OK\n");
-    
+    calc_data<Random_cycle, Local_search_steepest>("Data/kroB200.tsp",1,"Local Search Greedy Edge Neighborhood");
+    calc_data2<Random_cycle, Memory_search>("Data/kroB200.tsp", 1, "Memory_search");
+
     return 0;
 }
 
