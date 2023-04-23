@@ -501,12 +501,12 @@ Memory_search::Memory_search(Cycle_abstract *cycle) : Local_search_abstract(cycl
     // printf("Start: %d\n",get_length());
     generate_all_moves();
     run();
-    int len = get_length();
-    generate_all_moves();
-    run();
+    // int len = get_length();
+    // generate_all_moves();
+    // run();
 
-    if (get_length() != len)
-        printf("Error nie wszystkie ruchy");
+    // if (get_length() != len)
+    //     printf("Error nie wszystkie ruchy");
     // printf("Koniec: %d\n",get_length());
     // generate_all_moves();
     // run();
