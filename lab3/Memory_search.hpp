@@ -444,6 +444,7 @@ void Memory_search::make_move(move_data move)
         // generate_moves_inner(index_b, move.which_cycle);
 
         for(int i=index_a; i < index_b+1;i++){
+            if(i>=cycle.size()) continue;
             generate_moves_inner(i, move.which_cycle);
             generate_moves_outer(i, move.which_cycle);
         }
