@@ -33,10 +33,10 @@ void save_coords_list(vector<pair<double, double>> cycle_coords_A,vector<pair<do
 
     output_file.close();
 }
-
+template <class Cycle>
 void make_data(string filename, int a)
 {
-    Greedy_2regret_cycle cycle(filename, a);
+    Cycle cycle(filename, a);
     save_coords_list(cycle.get_cycle_coords(cycle.A_cycle), cycle.get_cycle_coords(cycle.B_cycle), "output/before.data");
 
     cout << "Przed" << cycle.get_length() << endl;
@@ -141,7 +141,7 @@ void calc_data2(string filename, int times = 1, string name = "")
 int main()
 {
     
-    // make_data("Data/kroB100.tsp", 14);
+    make_data<Random_cycle>("Data/kroA200.tsp", 20);
     // Greedy_2regret_cycle cycle("Data/kroB100.tsp");
     // Memory_search ms(&cycle);
     // printf("all OK\n");
