@@ -38,26 +38,17 @@ void make_data(string filename, int a)
     Greedy_2regret_cycle cycle(filename, a);
     save_coords_list(cycle.get_cycle_coords(cycle.A_cycle), cycle.get_cycle_coords(cycle.B_cycle), "output/before.data");
 
-    cout << "Przed: " <<cycle.A_length + cycle.B_length << endl;
-    cout << "-------Local Search Greedy Edge Neighborhood-------" << endl;
-    Local_search_greedy LSGE(&cycle, EDGE_NEIGHBORHOOD);
-    cout << "Po: " << LSGE.get_length() << endl;
-    save_coords_list(LSGE.get_A_coords(), LSGE.get_B_coords(), "output/after_LSG_E.data");
-
-    cout << "-------Local Search Greedy Vertex Neighborhood-------" << endl;
-    Local_search_greedy LSGV(&cycle, VERTEX_NEIGHBORHOOD);
-    cout << "Po: " << LSGV.get_length() << endl;
-    save_coords_list(LSGV.get_A_coords(), LSGV.get_B_coords(), "output/after_LSG_V.data");
+    cout << "Przed" << cycle.get_length() << endl;
 
     cout << "-------Local Search Greedy Edge Neighborhood-------" << endl;
     Local_search_steepest LSSE(&cycle, EDGE_NEIGHBORHOOD);
     cout << "Po: " << LSSE.get_length() << endl;
     save_coords_list(LSSE.get_A_coords(), LSSE.get_B_coords(), "output/after_LSS_E.data");
 
-    cout << "-------Local Search Steepest Vertex Neighborhood-------" << endl;
-    Local_search_steepest LSSV(&cycle, VERTEX_NEIGHBORHOOD);
-    cout << "Po: " << LSSV.get_length() << endl;
-    save_coords_list(LSSV.get_A_coords(), LSSV.get_B_coords(), "output/after_LSS_V.data");
+    cout << "-------Local Memory Search-------" << endl;
+    Memory_search MS(&cycle);
+    cout << "Po: " << MS.get_length() << endl;
+    save_coords_list(MS.get_A_coords(), MS.get_B_coords(), "output/after_MS.data");
 }
 
 template < class Cycle, class LS >
@@ -98,12 +89,13 @@ void calc_data(string filename, int times = 1, string name = "", int type = VERT
 int main()
 {
     
-    // make_data("Data/kroB100.tsp", 14);
+    make_data("Data/kroB100.tsp", 14);
     // calc_data<Greedy_2regret_cycle, Local_search_steepest>("Data/kroB100.tsp",1,"Local Search Steepest Vertex Neighborhood");
     // calc_data<Greedy_2regret_cycle, Local_search_greedy>("Data/kroB100.tsp",1,"Local Search Greedy Vertex Neighborhood");
-    Greedy_2regret_cycle cycle("Data/kroB100.tsp");
-    Memory_search ms(&cycle);
-    printf("all OK\n");
+    // Greedy_2regret_cycle cycle("Data/kroB100.tsp");
+    // Memory_search ms(&cycle);
+    // printf("all OK\n");
+    
     return 0;
 }
 
