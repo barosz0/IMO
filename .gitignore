@@ -17,3 +17,14 @@ lab3/Memory_search.hpp.gch
 lab3/Local_search_abstract.hpp.gch
 lab3/Greedy_2regret_cycle.hpp.gch
 lab3/Random_cycle.hpp.gch
+lab4/a.exe
+lab4/Cycle_abstract.hpp.gch
+lab4/Greedy_2regret_cycle.hpp.gch
+lab4/Iterated_local_search_small.hpp.gch
+lab4/Local_search_abstract.hpp.gch
+lab4/Local_search_steepest.hpp.gch
+lab4/Memory_search copy.hpp.gch
+lab4/Memory_search.hpp.gch
+lab4/Multiple_start_search.hpp.gch
+lab4/parser.hpp.gch
+lab4/Random_cycle.hpp.gch
