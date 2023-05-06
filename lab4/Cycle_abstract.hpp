@@ -30,6 +30,7 @@ public:
     
     Cycle_abstract(string file);
     Cycle_abstract(string file, int a);
+    Cycle_abstract(vector<vector<int>> matrix_, vector<pair<double, double>> coords_, std::vector<int> A, std::vector<int> B);
     ~Cycle_abstract();
 };
 
@@ -138,6 +139,33 @@ Cycle_abstract::Cycle_abstract(string file, int a)
     taken = vector<bool>(coords.size());
     taken[b] = taken[a] = true;
 }
+
+Cycle_abstract::Cycle_abstract(vector<vector<int>> matrix_, vector<pair<double, double>> coords_, std::vector<int> A, std::vector<int> B)
+{
+    // printf("Abstract_start\n");
+    matrix = matrix_;
+    coords = coords_;
+
+
+
+    A_cycle = list<int>(A.begin(), A.end());
+    A_length = 0;
+
+    B_cycle = list<int>(B.begin(), B.end());
+    B_length = 0;
+    taken = vector<bool>(coords.size());
+
+    for(int i = 0; i<A.size();i++)
+    {
+        taken[A[i]]= true;
+    }
+
+    for(int i = 0; i<B.size();i++)
+    {
+        taken[B[i]]= true;
+    }
+}
+
 Cycle_abstract::~Cycle_abstract()
 {
 }

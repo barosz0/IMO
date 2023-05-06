@@ -8,6 +8,8 @@
 #include "Multiple_start_search.hpp"
 #include "Local_search_steepest.hpp"
 #include "Iterated_local_search_small.hpp"
+#include "Iterated_local_search_big.hpp"
+
 
 
 using namespace std;
@@ -129,8 +131,11 @@ int main()
     printf("Start\n");
     // Multiple_start_search<Memory_search,Random_cycle> LS("Data/kroA200.tsp", 100);
     // Multiple_start_search<Memory_search,Greedy_2regret_cycle> LS("Data/kroA200.tsp", 100);
-    Random_cycle cycle("Data/kroA200.tsp");
-    Iterated_local_search_small LS(&cycle);
+    // Random_cycle cycle("Data/kroA200.tsp");
+    Greedy_2regret_cycle cycle("Data/kroA200.tsp");
+    // Iterated_local_search_small LS(&cycle);
+    Iterated_local_search_big LS(&cycle);
+
     // Memory_search MS(&cycle);
     printf("Final: %d\n", LS.get_length());
     printf("all OK\n");

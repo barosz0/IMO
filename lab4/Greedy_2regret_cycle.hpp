@@ -16,6 +16,7 @@ private:
 public:
     Greedy_2regret_cycle(string file);
     Greedy_2regret_cycle(string file, int a);
+    Greedy_2regret_cycle(vector<vector<int>> matrix_, vector<pair<double, double>> coords_, std::vector<int> A, std::vector<int> B);
     ~Greedy_2regret_cycle();
 };
 
@@ -130,10 +131,14 @@ void Greedy_2regret_cycle::run()
     while(A->size() + B->size() < coords.size())
     {
         
-        *a_len += next_pick(A,B);
+        // printf("b: %d %d\n", A->size(),B->size());
+        if(A->size()>B->size()){
         swap(A,B);
         swap(a_len,b_len);
-            
+        }
+        // printf("b: %d %d\n", A->size(),B->size());
+        *a_len += next_pick(A,B);
+        // printf("after::\n");
         // printf("\rPozostalo: %d   ", coords.size() - (A->size() + B->size()));
         // cout<< A->size() + B->size() << endl;
     }
@@ -144,6 +149,9 @@ Greedy_2regret_cycle::Greedy_2regret_cycle(string file): Cycle_abstract(file)
 {run();}
 
 Greedy_2regret_cycle::Greedy_2regret_cycle(string file, int a) : Cycle_abstract(file, a)
+{run();}
+
+Greedy_2regret_cycle::Greedy_2regret_cycle(vector<vector<int>> matrix_, vector<pair<double, double>> coords_, std::vector<int> A, std::vector<int> B) : Cycle_abstract(matrix_,coords_,A,B)
 {run();}
 
 Greedy_2regret_cycle::~Greedy_2regret_cycle()
