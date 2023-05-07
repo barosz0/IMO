@@ -23,7 +23,7 @@ void Multiple_start_search<LS_,cycle_>::run()
 {
     for(int i = 0; i<iterations; i++)
     {
-        cycle_ &cycle = * new cycle_(filename, 0, i);
+        cycle_ &cycle = * new cycle_(filename);
         LS_ LS(&cycle);
 
         if(A_cycle.size() + B_cycle.size() == 0 || LS.get_length() < get_length())
@@ -33,7 +33,7 @@ void Multiple_start_search<LS_,cycle_>::run()
             orginal_cycle = &cycle;
             recalculate_length();
         }
-        printf("i:%d\tlen:%d\n", i, get_length());
+        printf("i:%d\tlen:%d\r", i, get_length());
     }
 }
 
@@ -47,8 +47,6 @@ Multiple_start_search<LS_,cycle_>::Multiple_start_search(string filename_, int i
     iterations = iterations_;
 
     run();
-
-    printf("%d\n", get_length());
 }
 
 template <class LS_, class cycle_>

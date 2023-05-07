@@ -547,13 +547,13 @@ void Memory_search::run()
             // moves = priority_queue<move_data>();
             // generate_all_moves();
             // printf("srodek %d\n", get_length());
-            if(get_length() - move.diff != len){
-                printf("%d - %d != %d\n",get_length(), move.diff, len);
-                printf("Error\n");
-                exit(2);
-                return;
-            }
-            len = get_length();
+            // if(get_length() - move.diff != len){
+            //     printf("%d - %d != %d\n",get_length(), move.diff, len);
+            //     printf("Error\n");
+            //     exit(2);
+            //     return;
+            // }
+            // len = get_length();
             // generate_all_moves();
 
         }

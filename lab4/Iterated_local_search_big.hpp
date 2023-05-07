@@ -80,7 +80,7 @@ void Iterated_local_search_big::run()
     while(true)
     {
         auto end = std::chrono::high_resolution_clock::now(); // pobranie aktualnego czasu
-        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
         
         make_delete(A_copy,B_copy);
         // printf("Greedy 2\n");
@@ -99,7 +99,7 @@ void Iterated_local_search_big::run()
             A_cycle = A_copy;
             B_cycle = B_copy;
             recalculate_length();
-            printf("new len:%d\n", get_length());
+            printf("new len:%d\r", get_length());
 
         }
 

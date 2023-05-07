@@ -11,8 +11,9 @@
 #include "Iterated_local_search_big.hpp"
 
 
-
+int times_test_max = 10;
 using namespace std;
+
 
 void save_coords_list(vector<pair<double, double>> cycle_coords_A,vector<pair<double, double>> cycle_coords_B, string filename)
 {
@@ -58,7 +59,7 @@ void make_data(string filename, int a)
 }
 
 template < class Cycle, class LS >
-void calc_data2(string filename, int times = 1, string name = "")
+void calc_data(string filename, int times = 1, string name = "")
 {
     vector<Cycle> cycles;
     int avg_start=0;
@@ -93,9 +94,111 @@ void calc_data2(string filename, int times = 1, string name = "")
     time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     time /= 100*times;
 
+    cout<< "                                                              \r";
     cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
     cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Srednia poprawa:\t" << avg_start - avg_len << endl;
+    cout << "Minimalna dlugosc:\t" << min_len << endl;
+    cout << "Maksymalna dlugosc:\t" << max_len << endl;
+}
+
+long long do_MSLS()
+{
+    
+    long long time;
+    int avg_len;
+    int min_len = 99999999;
+    int max_len = -1;
+    int len;
+
+    cout << "-------" << "MULTIPLE START LOCAL SEARCH" << "-------" << endl;
+    
+    avg_len = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for(int t = 0; t < times_test_max; t++)
+    {
+        len = Multiple_start_search<Memory_search,Random_cycle>("Data/kroA200.tsp", 100).get_length();
+        avg_len += len;
+        min_len = min(min_len,len);
+        max_len = max(max_len,len);
+    }
+    
+    auto stop = std::chrono::high_resolution_clock::now();
+    avg_len /= times_test_max;
+    time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    time /= times_test_max;
+
+    cout<< "                                                              \r";
+    cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
+    cout << "Srednia dlugosc:\t" << avg_len << endl;
+    cout << "Minimalna dlugosc:\t" << min_len << endl;
+    cout << "Maksymalna dlugosc:\t" << max_len << endl;
+
+    return time;
+}
+
+void do_ILS1(int time)
+{
+    int avg_len;
+    int min_len = 99999999;
+    int max_len = -1;
+    int len;
+
+    cout << "-------" << "ITERATED LOCAL SEARCH 1" << "-------" << endl;
+    
+    avg_len = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for(int t = 0; t < times_test_max; t++)
+    {
+        Random_cycle cycle("Data/kroA200.tsp");
+        len = Iterated_local_search_small(&cycle,time,10).get_length();
+        avg_len += len;
+        min_len = min(min_len,len);
+        max_len = max(max_len,len);
+    }
+    
+    auto stop = std::chrono::high_resolution_clock::now();
+    avg_len /= times_test_max;
+    time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    time /= times_test_max;
+
+    cout<< "                                                              \r";
+    cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
+    cout << "Srednia dlugosc:\t" << avg_len << endl;
+    cout << "Minimalna dlugosc:\t" << min_len << endl;
+    cout << "Maksymalna dlugosc:\t" << max_len << endl;
+}
+
+void do_ILS2(int time)
+{
+    int avg_len;
+    int min_len = 99999999;
+    int max_len = -1;
+    int len;
+
+    cout << "-------" << "ITERATED LOCAL SEARCH 2" << "-------" << endl;
+    
+    avg_len = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for(int t = 0; t < times_test_max; t++)
+    {
+        Greedy_2regret_cycle cycle("Data/kroA200.tsp");
+        len = Iterated_local_search_big(&cycle,time).get_length();
+        avg_len += len;
+        min_len = min(min_len,len);
+        max_len = max(max_len,len);
+    }
+    
+    auto stop = std::chrono::high_resolution_clock::now();
+    avg_len /= times_test_max;
+    time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
+    time /= times_test_max;
+
+    cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
+    cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Minimalna dlugosc:\t" << min_len << endl;
     cout << "Maksymalna dlugosc:\t" << max_len << endl;
 }
@@ -132,12 +235,15 @@ int main()
     // Multiple_start_search<Memory_search,Random_cycle> LS("Data/kroA200.tsp", 100);
     // Multiple_start_search<Memory_search,Greedy_2regret_cycle> LS("Data/kroA200.tsp", 100);
     // Random_cycle cycle("Data/kroA200.tsp");
-    Greedy_2regret_cycle cycle("Data/kroA200.tsp");
+    // Greedy_2regret_cycle cycle("Data/kroA200.tsp");
     // Iterated_local_search_small LS(&cycle);
-    Iterated_local_search_big LS(&cycle);
+    // Iterated_local_search_big LS(&cycle);
 
     // Memory_search MS(&cycle);
-    printf("Final: %d\n", LS.get_length());
+    // printf("Final: %d\n", LS.get_length());
+    int time = do_MSLS();
+    do_ILS1(time);
+    do_ILS2(time);
     printf("all OK\n");
 
 

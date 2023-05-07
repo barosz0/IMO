@@ -117,13 +117,13 @@ void Iterated_local_search_small::run()
             A_cycle = LS.get_A_cycle();
             B_cycle = LS.get_B_cycle();
             recalculate_length();
-            printf("new len:%d\n", get_length());
+            printf("new len:%d\r", get_length());
 
         }
 
 
         auto end = std::chrono::high_resolution_clock::now(); // pobranie aktualnego czasu
-        auto elapsed_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
         
         if (elapsed_time >= max_running_time) // sprawdzenie, czy czas trwania został osiągnięty
         {
