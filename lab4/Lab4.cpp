@@ -114,26 +114,31 @@ long long do_MSLS()
     cout << "-------" << "MULTIPLE START LOCAL SEARCH" << "-------" << endl;
     
     avg_len = 0;
+    int avg_iter = 0;
     auto start = std::chrono::high_resolution_clock::now();
 
     for(int t = 0; t < times_test_max; t++)
     {
-        len = Multiple_start_search<Memory_search,Random_cycle>("Data/kroA200.tsp", 100).get_length();
+        auto m = Multiple_start_search<Memory_search,Random_cycle>("Data/kroA200.tsp", 100);
+        len = m.get_length();
         avg_len += len;
         min_len = min(min_len,len);
         max_len = max(max_len,len);
+        avg_iter += m.get_moves();
     }
     
     auto stop = std::chrono::high_resolution_clock::now();
     avg_len /= times_test_max;
     time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     time /= times_test_max;
+    avg_iter /= times_test_max;
 
     cout<< "                                                              \r";
     cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
     cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Minimalna dlugosc:\t" << min_len << endl;
     cout << "Maksymalna dlugosc:\t" << max_len << endl;
+    cout << "Ilosc iteracji:\t" << avg_iter << endl;
 
     return time;
 }
@@ -147,60 +152,75 @@ void do_ILS1(int time)
 
     cout << "-------" << "ITERATED LOCAL SEARCH 1" << "-------" << endl;
     
+    int avg_iter = 0;
     avg_len = 0;
     auto start = std::chrono::high_resolution_clock::now();
 
     for(int t = 0; t < times_test_max; t++)
     {
         Random_cycle cycle("Data/kroA200.tsp");
-        len = Iterated_local_search_small(&cycle,time,10).get_length();
+        auto m = Iterated_local_search_small(&cycle,time);
+        len = m.get_length();
         avg_len += len;
         min_len = min(min_len,len);
         max_len = max(max_len,len);
+        avg_iter += m.get_moves();
     }
     
     auto stop = std::chrono::high_resolution_clock::now();
     avg_len /= times_test_max;
     time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     time /= times_test_max;
+    avg_iter /= times_test_max;
 
     cout<< "                                                              \r";
     cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
     cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Minimalna dlugosc:\t" << min_len << endl;
     cout << "Maksymalna dlugosc:\t" << max_len << endl;
+    cout << "Ilosc iteracji:\t" << avg_iter << endl;
 }
 
-void do_ILS2(int time)
+void do_ILS2(int time, bool do_local_search = false)
 {
     int avg_len;
     int min_len = 99999999;
     int max_len = -1;
     int len;
+    string tekst;
+    if(do_local_search)
+        tekst = "(with local search)";
+    else
+        tekst = "(without local search)";
 
-    cout << "-------" << "ITERATED LOCAL SEARCH 2" << "-------" << endl;
+    cout << "-------" << "ITERATED LOCAL SEARCH 2 " << tekst << "-------" << endl;
     
+    int avg_iter = 0;
     avg_len = 0;
     auto start = std::chrono::high_resolution_clock::now();
 
     for(int t = 0; t < times_test_max; t++)
     {
         Greedy_2regret_cycle cycle("Data/kroA200.tsp");
-        len = Iterated_local_search_big(&cycle,time).get_length();
+        auto m = Iterated_local_search_big(&cycle,time, do_local_search);
+        len = m.get_length();
         avg_len += len;
         min_len = min(min_len,len);
         max_len = max(max_len,len);
+        avg_iter += m.get_moves();
     }
     
     auto stop = std::chrono::high_resolution_clock::now();
     avg_len /= times_test_max;
     time = std::chrono::duration_cast<std::chrono::microseconds>(stop - start).count();
     time /= times_test_max;
+    avg_iter /= times_test_max;
 
     cout << "Sredni czas:\t\t" << time << " (micro)s"<< endl;
     cout << "Srednia dlugosc:\t" << avg_len << endl;
     cout << "Minimalna dlugosc:\t" << min_len << endl;
     cout << "Maksymalna dlugosc:\t" << max_len << endl;
+    cout << "Ilosc iteracji:\t" << avg_iter << endl;
 }
 
 int main()
@@ -241,9 +261,11 @@ int main()
 
     // Memory_search MS(&cycle);
     // printf("Final: %d\n", LS.get_length());
-    int time = do_MSLS();
+    // do_MSLS();
+    int time = do_MSLS(); //  36133734; // 
     do_ILS1(time);
-    do_ILS2(time);
+    do_ILS2(time, false);
+    do_ILS2(time, true);
     printf("all OK\n");
 
 

@@ -23,6 +23,7 @@ private:
 public:
 
     Local_search_steepest(Cycle_abstract *cycle, int _neighborhood_type = VERTEX_NEIGHBORHOOD);
+    Local_search_steepest(vector<vector<int>> &matrix, std::vector<int> &A, std::vector<int> &B);
     ~Local_search_steepest();
 };
 
@@ -214,6 +215,17 @@ Local_search_steepest::Local_search_steepest(Cycle_abstract *cycle, int _neighbo
 
     run();
     recalculate_length();
+}
+
+Local_search_steepest::Local_search_steepest(vector<vector<int>> &matrix_, std::vector<int> &A, std::vector<int> &B)
+{
+    neighborhood_type = EDGE_NEIGHBORHOOD;
+    matrix = matrix_;
+    A_cycle = A;
+    B_cycle = B;
+
+    recalculate_length();
+    run();
 }
 
 Local_search_steepest::~Local_search_steepest()
