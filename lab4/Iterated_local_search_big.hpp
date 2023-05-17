@@ -3,6 +3,7 @@
 
 #include "Local_search_abstract.hpp"
 #include "Greedy_2regret_cycle.hpp"
+#include "Memory_search.hpp"
 #include <chrono>
 #include <algorithm>
 #include <random>
@@ -15,10 +16,12 @@ private:
     std::default_random_engine rng = std::default_random_engine(r());
     int max_running_time;
     int to_delete;
+    bool do_local_search;
+    bool do_stable;
     void make_delete(std::vector<int> &A, std::vector<int> &B);
     void run() override;
 public:
-    Iterated_local_search_big(Cycle_abstract *cycle, int max_running_time_);
+    Iterated_local_search_big(Cycle_abstract *cycle, int max_running_time_,  bool do_local_search_);
     ~Iterated_local_search_big();
 };
 
@@ -79,19 +82,27 @@ void Iterated_local_search_big::run()
 
     while(true)
     {
-        auto end = std::chrono::high_resolution_clock::now(); // pobranie aktualnego czasu
-        auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
-        
+        moves++;
+
         make_delete(A_copy,B_copy);
         // printf("Greedy 2\n");
         Greedy_2regret_cycle cycle(matrix, orginal_cycle->get_coords(), A_copy, B_copy);
         // printf("Greedy 2 - end\n");
 
-        A_copy = vector<int>(cycle.A_cycle.size());
-        std::copy(cycle.A_cycle.begin(), cycle.A_cycle.end(), A_copy.begin());
+        if (do_local_search)
+        {
+            Memory_search LS(&cycle);
+            A_copy = LS.get_A_cycle();
+            B_copy = LS.get_B_cycle();
+        }
+        else
+        {
+            A_copy = vector<int>(cycle.A_cycle.size());
+            std::copy(cycle.A_cycle.begin(), cycle.A_cycle.end(), A_copy.begin());
 
-        B_copy = vector<int>(cycle.B_cycle.size());
-        std::copy(cycle.B_cycle.begin(), cycle.B_cycle.end(), B_copy.begin());
+            B_copy = vector<int>(cycle.B_cycle.size());
+            std::copy(cycle.B_cycle.begin(), cycle.B_cycle.end(), B_copy.begin());
+        }
 
         // printf("len: %d\nnew len: %d\n", get_length(),cycle.get_length());
         if(cycle.get_length() < get_length())
@@ -102,7 +113,9 @@ void Iterated_local_search_big::run()
             printf("new len:%d\r", get_length());
 
         }
-
+        auto end = std::chrono::high_resolution_clock::now(); // pobranie aktualnego czasu
+        auto elapsed_time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count(); // obliczenie czasu jaki minął od startu
+        
         if (elapsed_time >= max_running_time) // sprawdzenie, czy czas trwania został osiągnięty
         {
             break;
@@ -110,8 +123,9 @@ void Iterated_local_search_big::run()
     }
 }
 
-Iterated_local_search_big::Iterated_local_search_big(Cycle_abstract *cycle, int max_running_time_ = 10000) : Local_search_abstract(cycle)
+Iterated_local_search_big::Iterated_local_search_big(Cycle_abstract *cycle, int max_running_time_ = 10000,  bool do_local_search_ = false) : Local_search_abstract(cycle)
 {
+    do_local_search = do_local_search_;
     max_running_time = max_running_time_;
     to_delete = 0.2*(cycle->get_coords().size());
     run();

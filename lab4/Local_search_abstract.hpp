@@ -26,6 +26,7 @@ public:
 
     vector<pair<double, double>> get_A_coords();
     vector<pair<double, double>> get_B_coords();
+    int get_moves();
 
     std::vector<int> get_A_cycle();
     std::vector<int> get_B_cycle();
@@ -35,6 +36,11 @@ public:
     ~Local_search_abstract();
     
 };
+
+int Local_search_abstract::get_moves()
+{
+    return moves;
+}
 
 std::vector<int> Local_search_abstract::get_A_cycle()
 {
@@ -150,7 +156,9 @@ Local_search_abstract::Local_search_abstract(Cycle_abstract *cycle)
     moves = 0;
 }
 
-Local_search_abstract::Local_search_abstract(){}
+Local_search_abstract::Local_search_abstract(){
+    moves = 0;
+}
 
 Local_search_abstract::~Local_search_abstract()
 {

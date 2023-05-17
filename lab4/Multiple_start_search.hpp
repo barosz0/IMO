@@ -23,6 +23,7 @@ void Multiple_start_search<LS_,cycle_>::run()
 {
     for(int i = 0; i<iterations; i++)
     {
+        moves++;
         cycle_ &cycle = * new cycle_(filename);
         LS_ LS(&cycle);
 

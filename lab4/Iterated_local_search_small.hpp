@@ -109,17 +109,20 @@ void Iterated_local_search_small::run()
     auto start = std::chrono::high_resolution_clock::now();
     while(true)
     {
-        
+        moves++;
         make_random_moves(moves_per_iteration, A_copy, B_copy);
         Memory_search LS(matrix, A_copy, B_copy);
+        // printf("new len:%d\n", get_length());
         if(LS.get_length() < get_length())
         {
             A_cycle = LS.get_A_cycle();
             B_cycle = LS.get_B_cycle();
-            recalculate_length();
+            // recalculate_length();
             printf("new len:%d\r", get_length());
-
         }
+
+        A_copy = LS.get_A_cycle();
+        B_copy = LS.get_B_cycle();
 
 
         auto end = std::chrono::high_resolution_clock::now(); // pobranie aktualnego czasu
@@ -132,7 +135,7 @@ void Iterated_local_search_small::run()
     }
 }
 
-Iterated_local_search_small::Iterated_local_search_small(Cycle_abstract *cycle, int max_running_time_ = 10000, int moves_per_iteration_=10) : Local_search_abstract(cycle)
+Iterated_local_search_small::Iterated_local_search_small(Cycle_abstract *cycle, int max_running_time_ = 10000, int moves_per_iteration_=2) : Local_search_abstract(cycle)
 {
     max_running_time = max_running_time_;
     moves_per_iteration = moves_per_iteration_;

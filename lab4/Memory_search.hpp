@@ -55,9 +55,9 @@ private:
     void generate_all_moves();
     priority_queue<move_data> moves; 
     stack<move_data> moves_beta; // ruchy nie mozliwe w tym momecie ale mozliwe pozniej
-    int check_posible(move_data move);
+    int check_posible(move_data &move);
     int check_order(int index, int value,vector<int>& cycle);
-    void make_move(move_data move);
+    void make_move(move_data &move);
 
     void generate_moves_outer(int index_a, int which_cycle);
     void generate_moves_inner(int index_a, int which_cycle);
@@ -150,57 +150,6 @@ void Memory_search::generate_all_moves()
             }
         }
     }
-    // auto A_reversed = A_cycle;
-    // reverse(A_reversed.begin(), A_reversed.end());
-    // auto B_reversed = B_cycle;
-    // reverse(B_reversed.begin(), B_reversed.end());
-
-    // for(int cycle_index = 0; cycle_index<2;cycle_index++){
-    //     vector<int>& cycle = (cycle_index==0) ? A_reversed : B_reversed;
-    //     for(int a = 0; a < cycle.size(); a++)
-    //     {
-    //         for(int b = a+1; b < cycle.size(); b++)
-    //         {
-
-    //             if (a == b-1) continue;
-
-    //             int new_len = 0;
-
-    //             new_len -= matrix[cycle[a]][cycle[a+1]];
-
-    //             if(b + 1 < cycle.size())
-    //                 new_len -= matrix[cycle[b]][cycle[b+1]];
-    //             else // ostatnia krawedz
-    //                 new_len -= matrix[cycle[b]][cycle[0]];
-
-    //             new_len += matrix[cycle[a]][cycle[b]];
-    //             if(b + 1 < cycle.size())
-    //                 new_len += matrix[cycle[a+1]][cycle[b+1]];
-    //             else
-    //                 new_len += matrix[cycle[a+1]][cycle[0]];
-
-
-    //             if(0 > new_len)
-    //             {
-    //                 pair<int,int> neigh_A = get_adjacent_vertex(cycle, a);
-    //                 pair<int,int> neigh_B = get_adjacent_vertex(cycle, b);
-
-    //                 move_data m;
-    //                 m.a = cycle[a];
-    //                 m.neigh_A = neigh_A;
-
-    //                 m.b = cycle[b];
-    //                 m.neigh_B = neigh_B;
-
-    //                 m.diff = new_len;
-    //                 m.type = INNER_CHANGE;
-    //                 m.which_cycle = cycle_index;
-    //                 moves.push(m);
-    //             }
-
-    //         }
-    //     }
-    // }
 }
 
 int Memory_search::check_order(int index, int value,vector<int>& cycle)
@@ -221,7 +170,7 @@ int Memory_search::check_order(int index, int value,vector<int>& cycle)
 // 1 - ruch morzliwy
 // 0 - ruch do usuniecia
 // -1 - niemozliwy ale nie usuwac
-int Memory_search::check_posible(move_data move)
+int Memory_search::check_posible(move_data &move)
 {
     if(move.diff >= 0)
         return 0;
@@ -269,9 +218,7 @@ int Memory_search::check_posible(move_data move)
 
         // printf("%d %d\n",neigh_A != move.neigh_A,neigh_B != move.neigh_B);
 
-        // printf("A: (%d,%d), (%d,%d)\n",move.neigh_A.first,move.neigh_A.second,neigh_A.first,neigh_A.second);
-        // printf("B: (%d,%d), (%d,%d)\n",move.neigh_B.first,move.neigh_B.second,neigh_B.first,neigh_B.second);
-        // printf("order a: %d, order b: %d\n", a_order, b_order);
+
 
         if(move.neigh_A.second != neigh_A.first && move.neigh_A.second != neigh_A.second) return 0; // nie zgadza sie nastepnik
         if(move.neigh_B.second != neigh_B.first && move.neigh_B.second != neigh_B.second) return 0; // nie zgadza sie nastepnik
@@ -281,7 +228,7 @@ int Memory_search::check_posible(move_data move)
             return 1;
         }
         else
-            return -1;
+            return 0;
     }
     return 0;
 }
@@ -389,7 +336,7 @@ void Memory_search::generate_moves_inner(int index_a, int which_cycle)
     
 }
 
-void Memory_search::make_move(move_data move)
+void Memory_search::make_move(move_data &move)
 {
     // printf("Diff: %d\n", move.diff);
     if(move.type == OUTER_CHANGE)
@@ -538,7 +485,7 @@ void Memory_search::run()
 
             make_move(move);
             // printf("4\n");
-            
+            // printf("%d <----------\n", moves.size());
             while (!moves_beta.empty())
             {
                 moves.push(moves_beta.top());
@@ -596,6 +543,7 @@ Memory_search::Memory_search(vector<vector<int>> &matrix_, std::vector<int> &A, 
 
     generate_all_moves();
     run();
+    // exit(2);
 }
 
 Memory_search::~Memory_search()
