@@ -7,6 +7,8 @@
 #include "Random_cycle.hpp"
 #include <random>
 
+#ifndef STRUCT_SOLUTION
+#define STRUCT_SOLUTION
 struct solution
 {
     std::vector<int> A_cycle;
@@ -36,6 +38,7 @@ struct solution
         score = -1;
     }
 };
+#endif
 
 
 class Hybrid : public Local_search_abstract
@@ -64,7 +67,7 @@ private:
     
     void run() override;
 public:
-    Hybrid(string filename_, int max_running_time_, int population_size_);
+    Hybrid(string filename_, int max_running_time_, bool do_local_search_, int population_size_);
     ~Hybrid();
 };
 
@@ -254,8 +257,9 @@ bool Hybrid::check_if_score_in_population(int score)
     return false;
 }
 
-Hybrid::Hybrid(string filename_, int max_running_time_, int population_size_ = 20)
+Hybrid::Hybrid(string filename_, int max_running_time_, bool do_local_search_ = true, int population_size_ = 20)
 {
+    do_local_search = do_local_search_;
     population_size = population_size_;
     filename = filename_;
     max_running_time = max_running_time_;
